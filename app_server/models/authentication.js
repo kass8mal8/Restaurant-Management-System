@@ -20,11 +20,6 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	employeeNumber: {
-		type: String,
-		required: true,
-		unique: true,
-	},
 });
 
 // Hash the password before saving
