@@ -20,6 +20,11 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	otp: {
+		type: Number || null,
+		// required: true,
+		default: null,
+	},
 });
 
 // Hash the password before saving

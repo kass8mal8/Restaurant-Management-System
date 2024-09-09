@@ -30,28 +30,28 @@ const generateOTP = () => {
 };
 
 const signup = async (req, res) => {
-	console.log(req.body);
-	const { firstName, lastName, email, password } = req.body;
+	const { firstName, lastName, email, password, employeeNumber } = req.body;
 
 	try {
 		const user = await User.create({
 			email,
 			password,
+			employeeNumber,
 			firstName,
 			lastName,
 		});
 
 		const token = generateToken({
-			first_name: user.firstName,
-			last_name: user.lastName,
+			name: `${user.firstName} ${user.lastName}`,
 			email: user.email,
+			employee_number: user.employeeNumber,
 		});
 
 		res.cookie("token", token, { httpOnly: true });
 
 		res.status(201).json({ message: "User registered successfully" });
 	} catch (error) {
-		res.json({ message: error.message }).status(500);
+		res.status(500).json({ message: error.message });
 	}
 };
 
@@ -61,20 +61,21 @@ const signin = async (req, res) => {
 		await User.login(email, password);
 
 		const generatedOTP = generateOTP();
-		req.session.otp = generatedOTP;
+
+		await User.findOneAndUpdate({ email }, { otp: generatedOTP });
 
 		const mailOptions = {
-			from: EMAIL_ADDRESS, // sender address
-			to: email, // receiver address
+			from: EMAIL_ADDRESS,
+			to: email,
 			subject: "Restaurant Management System - OTP Verification", // Subject line
 			text: `Your One-Time Password (OTP) is: ${generatedOTP}`, // plain text body
 		};
 
 		await transporter.sendMail(mailOptions);
 
-		res.json({ message: "verify OTP sent to email", generatedOTP }).status(200);
+		res.status(200).json({ message: "verify OTP sent to email", generatedOTP });
 	} catch (error) {
-		res.json({ message: error.message }).status(401);
+		res.status(200).json({ message: error.message });
 	}
 };
 
@@ -89,14 +90,16 @@ const verifyOTP = async (req, res) => {
 			email: user.email,
 		});
 
-		if (otp !== req.session.otp) {
+		if (otp !== user.otp) {
 			return res.status(400).json({ message: "Invalid OTP" });
 		}
 
+		await User.findOneAndUpdate({ email }, { otp: null });
+
 		res.cookie("token", token, { httpOnly: true });
-		res.json({ message: "Authenticated successfully" }).status(200);
+		res.status(200).json({ message: "Authenticated successfully" });
 	} catch (error) {
-		res.json({ error: error.message }).status(401);
+		res.status(200).json({ error: error.message });
 	}
 };
 
@@ -104,7 +107,7 @@ const signout = (req, res) => {
 	req.session.destroy();
 
 	res.clearCookie("token");
-	res.json({ message: "Logged out successfully" }).status(200);
+	res.status(200).json({ message: "Logged out successfully" });
 };
 
 module.exports = {
