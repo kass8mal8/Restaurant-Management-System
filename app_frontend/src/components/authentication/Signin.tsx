@@ -1,6 +1,6 @@
 import Introduction from "./Introduction";
 import usePost from "../../hooks/usePost";
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, FC } from "react";
 import Otp from "./Otp";
 
 type UserDetails = {
@@ -10,7 +10,7 @@ type UserDetails = {
 	password: string;
 };
 
-const Signin: React.FC = () => {
+const Signin: FC = () => {
 	const [userDetails, setUserDetails] = useState<UserDetails>({
 		firstName: "",
 		lastName: "",

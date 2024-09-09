@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useEffect, useState, FC } from "react";
 import usePost from "../../hooks/usePost";
 
-type emailProps = {
+type otpProps = {
 	email: string;
 };
 
-const Otp: React.FC<emailProps> = ({ email }) => {
+const Otp: FC<otpProps> = ({ email }) => {
 	const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
 	const [isComplete, setIsComplete] = useState<boolean>(false);
 	const url = "http://localhost:5000/api/auth/verify_otp";
@@ -30,19 +30,26 @@ const Otp: React.FC<emailProps> = ({ email }) => {
 
 	const handleSubmit = async () => {
 		try {
+			console.log({ otp, email });
 			await post({ otp, email });
 		} catch (error) {
 			console.log(error);
 		}
 	};
+	const [encryptedEmail, setEncryptedEmail] = useState<string | null>(null);
 
-	const stars = email.length - (email.indexOf("@") + 2);
+	useEffect(() => {
+		if (email.length) {
+			const stars = Math.max(0, email.length - (email.indexOf("@") + 2)); // Ensure non-negative
 
-	// format of email will be u***30@gmail.com
-	const encryptedEmail =
-		email[0] +
-		Array(stars).fill("*").join("") +
-		email.slice(email.indexOf("@") - 2, email.length);
+			// format of email will be u***30@gmail.com
+			setEncryptedEmail(
+				email[0] +
+					Array(stars).fill("*").join("") +
+					email.slice(email.indexOf("@") - 2, email.length)
+			);
+		}
+	}, [email]);
 
 	return (
 		<div className="bg-white px-6 py-7 mx-auto w-full rounded-lg">
@@ -50,7 +57,7 @@ const Otp: React.FC<emailProps> = ({ email }) => {
 				OTP Verification
 			</h2>
 			<p className="mb-6 text-gray-600">
-				Enter the code that was sent to {encryptedEmail}
+				Enter the code that was sent to your email {encryptedEmail}
 			</p>
 			<div className="flex space-x-4 justify-center w-full">
 				{otpCode.map((code, index) => (

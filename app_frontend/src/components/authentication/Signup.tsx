@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import Introduction from "./Introduction";
-import { useState } from "react";
+import { useState, FC } from "react";
 import usePost from "../../hooks/usePost";
 
 type UserDetails = object;
 
-const Signup: React.FC = () => {
+const Signup: FC = () => {
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setUserDetails({
