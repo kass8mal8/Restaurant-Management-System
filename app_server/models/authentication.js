@@ -20,10 +20,10 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	employeeNumber: {
-		type: String,
-		required: true,
-		unique: true,
+	otp: {
+		type: Number || null,
+		// required: true,
+		default: null,
 	},
 });
 

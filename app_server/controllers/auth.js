@@ -1,15 +1,14 @@
 const User = require("../models/authentication");
 const jwt = require("jsonwebtoken");
-// const otplib = require("otplib");
 const nodemailer = require("nodemailer");
-const { SECRET_KEY, EMAIL_ADDRESS, EMAIL_PASSWORD } = process.env;
+const { SECRET_KEY, EMAIL_ADDRESS, APP_PASSWORD } = process.env;
 
 // nodemailer configuration
 const transporter = nodemailer.createTransport({
 	service: "gmail",
 	auth: {
 		user: EMAIL_ADDRESS,
-		pass: EMAIL_PASSWORD,
+		pass: APP_PASSWORD,
 	},
 	port: 587,
 	secure: false,
@@ -23,7 +22,6 @@ const generateToken = (payload) => {
 };
 
 // generate otp
-// otplib.authenticator(6)
 
 const generateOTP = () => {
 	const min = 100000;
@@ -32,7 +30,6 @@ const generateOTP = () => {
 };
 
 const signup = async (req, res) => {
-	console.log(req.body);
 	const { firstName, lastName, email, password, employeeNumber } = req.body;
 
 	try {
@@ -54,7 +51,7 @@ const signup = async (req, res) => {
 
 		res.status(201).json({ message: "User registered successfully" });
 	} catch (error) {
-		res.json({ message: error.message }).status(500);
+		res.status(500).json({ message: error.message });
 	}
 };
 
@@ -64,20 +61,21 @@ const signin = async (req, res) => {
 		await User.login(email, password);
 
 		const generatedOTP = generateOTP();
-		req.session.otp = generatedOTP;
+
+		await User.findOneAndUpdate({ email }, { otp: generatedOTP });
 
 		const mailOptions = {
-			from: EMAIL_ADDRESS, // sender address
-			to: email, // receiver address
+			from: EMAIL_ADDRESS,
+			to: email,
 			subject: "Restaurant Management System - OTP Verification", // Subject line
 			text: `Your One-Time Password (OTP) is: ${generatedOTP}`, // plain text body
 		};
 
 		await transporter.sendMail(mailOptions);
 
-		res.json({ message: "verify OTP sent to email" }).status(200);
+		res.status(200).json({ message: "verify OTP sent to email", generatedOTP });
 	} catch (error) {
-		res.json({ message: error.message }).status(401);
+		res.status(200).json({ message: error.message });
 	}
 };
 
@@ -87,24 +85,34 @@ const verifyOTP = async (req, res) => {
 	try {
 		const user = await User.findOne({ email });
 		const token = generateToken({
-			name: `${user.firstName} ${user.lastName}`,
+			first_name: user.firstName,
+			last_name: user.lastName,
 			email: user.email,
-			employee_number: user.employeeNumber,
 		});
 
-		if (otp !== req.session.otp) {
+		if (otp !== user.otp) {
 			return res.status(400).json({ message: "Invalid OTP" });
 		}
 
+		await User.findOneAndUpdate({ email }, { otp: null });
+
 		res.cookie("token", token, { httpOnly: true });
-		res.json({ message: "Authenticated successfully" }).status(200);
+		res.status(200).json({ message: "Authenticated successfully" });
 	} catch (error) {
-		res.json({ error: error.message }).status(401);
+		res.status(200).json({ error: error.message });
 	}
+};
+
+const signout = (req, res) => {
+	req.session.destroy();
+
+	res.clearCookie("token");
+	res.status(200).json({ message: "Logged out successfully" });
 };
 
 module.exports = {
 	signup,
 	signin,
 	verifyOTP,
+	signout,
 };

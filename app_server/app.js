@@ -16,7 +16,7 @@ const limiter = rateLimit({
 
 app.use(
 	session({
-		secret: SECRET_KEY, // Use a strong secret
+		secret: SECRET_KEY,
 		resave: false, // Prevent session resaving when not modified
 		saveUninitialized: true, // Save uninitialized session
 		cookie: { secure: false }, // Set to true if using HTTPS
