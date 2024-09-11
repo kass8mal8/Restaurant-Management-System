@@ -21,7 +21,7 @@ const UserSchema = new Schema({
 		required: true,
 	},
 	otp: {
-		type: Number || null,
+		type: String || null,
 		// required: true,
 		default: null,
 	},

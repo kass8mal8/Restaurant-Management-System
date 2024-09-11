@@ -2,6 +2,7 @@ const User = require("../models/authentication");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { SECRET_KEY, EMAIL_ADDRESS, APP_PASSWORD } = process.env;
+const bcrypt = require("bcrypt");
 
 // nodemailer configuration
 const transporter = nodemailer.createTransport({
@@ -62,7 +63,9 @@ const signin = async (req, res) => {
 
 		const generatedOTP = generateOTP();
 
-		await User.findOneAndUpdate({ email }, { otp: generatedOTP });
+		const salt = await bcrypt.genSalt(10);
+		const hashedOTP = await bcrypt.hash(String(generatedOTP), salt);
+		await User.findOneAndUpdate({ email }, { otp: hashedOTP });
 
 		const mailOptions = {
 			from: EMAIL_ADDRESS,
@@ -75,7 +78,7 @@ const signin = async (req, res) => {
 
 		res.status(200).json({ message: "verify OTP sent to email", generatedOTP });
 	} catch (error) {
-		res.status(200).json({ message: error.message });
+		res.status(401).json({ message: error.message });
 	}
 };
 
@@ -89,17 +92,18 @@ const verifyOTP = async (req, res) => {
 			last_name: user.lastName,
 			email: user.email,
 		});
+		console.log("Otp and User otp", otp, user.otp);
 
-		if (otp !== user.otp) {
-			return res.status(400).json({ message: "Invalid OTP" });
-		}
+		const dbOTP = bcrypt.compareSync(otp, user.otp);
+
+		if (!dbOTP) return res.status(401).json({ message: "Invalid OTP" });
 
 		await User.findOneAndUpdate({ email }, { otp: null });
 
 		res.cookie("token", token, { httpOnly: true });
 		res.status(200).json({ message: "Authenticated successfully" });
 	} catch (error) {
-		res.status(200).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 };
 
