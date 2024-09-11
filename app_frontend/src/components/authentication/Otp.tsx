@@ -25,8 +25,7 @@ const Otp: FC<otpProps> = ({ email }) => {
 		if (index === 5) setIsComplete(true);
 	};
 
-	const otp = +otpCode.join("");
-	console.log(typeof otpCode);
+	const otp = otpCode.join("");
 
 	const handleSubmit = async () => {
 		try {
