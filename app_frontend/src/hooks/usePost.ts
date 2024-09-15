@@ -15,8 +15,11 @@ const usePost = (url: string) => {
 
 			return res.data;
 		} catch (error) {
-			setLoading(false);
-			throw error?.response?.data ?? error;
+			if (axios.isAxiosError(error) && error.response) {
+				throw error.response.data;
+			} else {
+				throw new Error("An unexpected error occurred");
+			}
 		} finally {
 			setLoading(false);
 		}
