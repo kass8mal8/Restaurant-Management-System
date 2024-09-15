@@ -1,11 +1,11 @@
 import { useEffect, useState, FC } from "react";
 import usePost from "../../hooks/usePost";
 
-type otpProps = {
+type OtpProps = {
 	email: string;
 };
 
-const Otp: FC<otpProps> = ({ email }) => {
+const Otp: FC<OtpProps> = ({ email }) => {
 	const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
 	const [isComplete, setIsComplete] = useState<boolean>(false);
 	const url = "http://localhost:5000/api/auth/verify_otp";
@@ -29,7 +29,6 @@ const Otp: FC<otpProps> = ({ email }) => {
 
 	const handleSubmit = async () => {
 		try {
-			console.log({ otp, email });
 			await post({ otp, email });
 		} catch (error) {
 			console.log(error);
@@ -58,7 +57,7 @@ const Otp: FC<otpProps> = ({ email }) => {
 			<p className="mb-6 text-gray-600">
 				Enter the code that was sent to your email {encryptedEmail}
 			</p>
-			<div className="flex space-x-4 justify-center w-full">
+			<form className="flex space-x-4 justify-center w-full">
 				{otpCode.map((code, index) => (
 					<input
 						key={index}
@@ -70,7 +69,7 @@ const Otp: FC<otpProps> = ({ email }) => {
 						onChange={(e) => handleChange(index, e.target.value)}
 					/>
 				))}
-			</div>
+			</form>
 
 			<div className="mt-5  w-full">
 				<button

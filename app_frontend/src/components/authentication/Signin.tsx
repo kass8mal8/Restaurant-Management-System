@@ -4,16 +4,12 @@ import { useState, useRef, useEffect, FC } from "react";
 import Otp from "./Otp";
 
 type UserDetails = {
-	firstName: string;
-	lastName: string;
 	email: string;
 	password: string;
 };
 
 const Signin: FC = () => {
 	const [userDetails, setUserDetails] = useState<UserDetails>({
-		firstName: "",
-		lastName: "",
 		email: "",
 		password: "",
 	});
@@ -26,9 +22,9 @@ const Signin: FC = () => {
 
 	const url: string = "http://localhost:5000/api/auth/signin";
 	const { post, loading } = usePost(url);
-	// const navigate = useNavigate();
 	const modalRef = useRef<HTMLDialogElement>();
 	const [isOpen, setIsOpen] = useState(false);
+	const [error, setError] = useState<Error | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -37,7 +33,9 @@ const Signin: FC = () => {
 			await post(userDetails);
 			setIsOpen(true);
 		} catch (error) {
-			console.log(error);
+			setError(
+				error instanceof Error ? error : new Error("An unknown error occurred")
+			);
 		}
 	};
 
@@ -56,9 +54,13 @@ const Signin: FC = () => {
 		}
 	};
 
+	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 	useEffect(() => {
 		if (isOpen) modalRef.current?.showModal();
-	}, [isOpen]);
+		setIsDisabled(
+			(Object.values(userDetails)[0] || Object.values(userDetails)[1]) === ""
+		);
+	}, [isOpen, userDetails]);
 
 	return (
 		<>
@@ -70,21 +72,26 @@ const Signin: FC = () => {
 						name="email"
 						placeholder="email"
 						onChange={handleChange}
-						className="border mb-4 p-3 rounded-lg w-full"
+						className="border mb-4 p-3 rounded-lg w-full focus:outline-none"
 					/>
 					<input
 						type="password"
 						name="password"
 						placeholder="password"
 						onChange={handleChange}
-						className="border mb-4 p-3 rounded-lg w-full"
+						className="border focus:outline-none mb-4 p-3 rounded-lg w-full"
 					/>
+					<p className="text-red-500 my-2">
+						{error?.message.includes("smtp.gmail.com")
+							? "Network error"
+							: error?.message}
+					</p>
 					<button
 						type="submit"
 						className={`${
 							loading ? "bg-gray-300" : "bg-[#6163EF]"
 						} p-3  w-full text-white rounded-lg`}
-						disabled={loading}
+						disabled={loading || isDisabled}
 					>
 						{loading ? "processing..." : "submit"}
 					</button>
