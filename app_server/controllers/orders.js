@@ -16,11 +16,10 @@ const addOrder = async (req, res) => {
 	}
 };
 
+// return orders from all users
 const getOrder = async (req, res) => {
-	const { userId } = req.params;
-
 	try {
-		const order = await Order.find({ userId: userId });
+		const order = await Order.find({});
 		order.length > 0
 			? res.json(order).status(201)
 			: res.json("Not Found").status(404);

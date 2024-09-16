@@ -31,21 +31,20 @@ const generateOTP = () => {
 };
 
 const signup = async (req, res) => {
-	const { firstName, lastName, email, password, employeeNumber } = req.body;
+	const { firstName, lastName, email, password } = req.body;
 
 	try {
 		const user = await User.create({
 			email,
 			password,
-			employeeNumber,
 			firstName,
 			lastName,
 		});
 
 		const token = generateToken({
-			name: `${user.firstName} ${user.lastName}`,
+			first_name: user.firstName,
+			last_name: user.lastName,
 			email: user.email,
-			employee_number: user.employeeNumber,
 		});
 
 		res.cookie("token", token, { httpOnly: true });
@@ -92,7 +91,6 @@ const verifyOTP = async (req, res) => {
 			last_name: user.lastName,
 			email: user.email,
 		});
-		console.log("Otp and User otp", otp, user.otp);
 
 		const dbOTP = bcrypt.compareSync(otp, user.otp);
 
@@ -100,10 +98,28 @@ const verifyOTP = async (req, res) => {
 
 		await User.findOneAndUpdate({ email }, { otp: null });
 
-		res.cookie("token", token, { httpOnly: true });
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production", // Set secure to true only in production
+			sameSite: "None", // or 'lax' for cross-site
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+		});
 		res.status(200).json({ message: "Authenticated successfully" });
 	} catch (error) {
 		res.status(500).json({ error: error.message });
+	}
+};
+
+const getUser = async (req, res) => {
+	const token = req.cookies.token;
+
+	if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+	try {
+		const decoded = jwt.verify(token, SECRET_KEY);
+		res.status(201).json({ user: decoded });
+	} catch (error) {
+		res.status(404).json(error.message);
 	}
 };
 
@@ -119,4 +135,5 @@ module.exports = {
 	signin,
 	verifyOTP,
 	signout,
+	getUser,
 };
