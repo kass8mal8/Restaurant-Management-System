@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Introduction from "./Introduction";
 import { useState, FC } from "react";
-import usePost from "../../hooks/usePost";
+import usePost from "../hooks/usePost";
 
 type UserDetails = object;
 

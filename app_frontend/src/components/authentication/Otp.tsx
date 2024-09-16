@@ -1,5 +1,6 @@
 import { useEffect, useState, FC } from "react";
-import usePost from "../../hooks/usePost";
+import usePost from "../hooks/usePost";
+import { useNavigate } from "react-router-dom";
 
 type OtpProps = {
 	email: string;
@@ -7,9 +8,10 @@ type OtpProps = {
 
 const Otp: FC<OtpProps> = ({ email }) => {
 	const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
-	const [isComplete, setIsComplete] = useState<boolean>(false);
+	const [isComplete, setIsComplete] = useState(false);
 	const url = "http://localhost:5000/api/auth/verify_otp";
 	const { post, loading } = usePost(url);
+	const navigate = useNavigate();
 
 	const handleChange = (index: number, value: string) => {
 		const updatedOtp = [...otpCode];
@@ -30,6 +32,7 @@ const Otp: FC<OtpProps> = ({ email }) => {
 	const handleSubmit = async () => {
 		try {
 			await post({ otp, email });
+			navigate("/");
 		} catch (error) {
 			console.log(error);
 		}

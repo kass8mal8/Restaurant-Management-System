@@ -1,15 +1,21 @@
 import Introduction from "./Introduction";
-import usePost from "../../hooks/usePost";
+import usePost from "../hooks/usePost";
 import { useState, useRef, useEffect, FC } from "react";
 import Otp from "./Otp";
 
-type UserDetails = {
+type User = {
 	email: string;
 	password: string;
 };
 
 const Signin: FC = () => {
-	const [userDetails, setUserDetails] = useState<UserDetails>({
+	const url: string = "http://localhost:5000/api/auth/signin";
+	const { post, loading } = usePost(url);
+	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const [error, setError] = useState<Error | null>(null);
+
+	const [userDetails, setUserDetails] = useState<User>({
 		email: "",
 		password: "",
 	});
@@ -19,12 +25,6 @@ const Signin: FC = () => {
 			[e.target.name]: e.target.value,
 		});
 	};
-
-	const url: string = "http://localhost:5000/api/auth/signin";
-	const { post, loading } = usePost(url);
-	const modalRef = useRef<HTMLDialogElement>();
-	const [isOpen, setIsOpen] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
