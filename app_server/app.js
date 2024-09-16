@@ -29,7 +29,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 const authRoute = require("./routes/auth");
+const orderRoute = require("./routes/orders");
 
 app.use("/api/auth", authRoute);
+app.use("/api/orders", orderRoute);
 
 module.exports = app;
