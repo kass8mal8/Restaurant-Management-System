@@ -60,6 +60,7 @@ const Signup: FC = () => {
 					type="password"
 					name="password"
 					placeholder="password"
+					minLength={8}
 					onChange={handleChange}
 					className="border mb-4 p-3 rounded-lg w-full"
 				/>

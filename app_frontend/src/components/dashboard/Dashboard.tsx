@@ -1,9 +1,11 @@
-import Profile from "./Profile";
+import NavBar from "../navigation/NavBar";
+import SideNav from "../navigation/SideNav";
 
 const Dashboard = () => {
 	return (
 		<div>
-			<Profile />
+			<NavBar />
+			<SideNav />
 		</div>
 	);
 };

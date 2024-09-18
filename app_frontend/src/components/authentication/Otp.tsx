@@ -27,7 +27,7 @@ const Otp: FC<OtpProps> = ({ email }) => {
 		if (index === 5) setIsComplete(true);
 	};
 
-	const otp = otpCode.join("");
+	const otp = otpCode.join(""); // converts the otp code into a string
 
 	const handleSubmit = async () => {
 		try {

@@ -79,7 +79,8 @@ const Signin: FC = () => {
 						name="password"
 						placeholder="password"
 						onChange={handleChange}
-						className="border focus:outline-none mb-4 p-3 rounded-lg w-full"
+						minLength={8}
+						className="border user-invalid:border-red-200 focus:outline-none mb-4 p-3 rounded-lg w-full"
 					/>
 					<p className="text-red-500 my-2">
 						{error?.message.includes("smtp.gmail.com")
