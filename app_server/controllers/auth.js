@@ -1,7 +1,14 @@
 const User = require("../models/authentication");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const { SECRET_KEY, EMAIL_ADDRESS, APP_PASSWORD } = process.env;
+const {
+	SECRET_KEY,
+	EMAIL_ADDRESS,
+	APP_PASSWORD,
+	ACCESS_TOKEN_EXPIRY,
+	REFRESH_TOKEN_EXPIRY,
+	REFRESH_TOKEN_SECRET,
+} = process.env;
 const bcrypt = require("bcrypt");
 
 // nodemailer configuration
@@ -16,10 +23,17 @@ const transporter = nodemailer.createTransport({
 });
 
 const generateToken = (payload) => {
-	return jwt.sign(payload, SECRET_KEY, {
-		expiresIn: "1h",
+	const accessToken = jwt.sign(payload, SECRET_KEY, {
+		expiresIn: ACCESS_TOKEN_EXPIRY,
 		algorithm: "HS256",
 	});
+
+	const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, {
+		expiresIn: REFRESH_TOKEN_EXPIRY,
+		algorithm: "HS256",
+	});
+
+	return { accessToken, refreshToken };
 };
 
 // generate otp
@@ -40,14 +54,6 @@ const signup = async (req, res) => {
 			firstName,
 			lastName,
 		});
-
-		const token = generateToken({
-			first_name: user.firstName,
-			last_name: user.lastName,
-			email: user.email,
-		});
-
-		res.cookie("token", token, { httpOnly: true });
 
 		res.status(201).json({ message: "User registered successfully" });
 	} catch (error) {
@@ -81,12 +87,42 @@ const signin = async (req, res) => {
 	}
 };
 
+const refreshAccessToken = (req, res) => {
+	const refreshToken = req.cookies.refreshToken;
+	console.log(refreshToken);
+
+	if (!refreshToken) {
+		return res.status(401).json({ message: "Refresh token not found" });
+	}
+
+	// Verify the refresh token
+	jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, user) => {
+		if (err) {
+			return res.status(403).json({ message: "Invalid refresh token" });
+		}
+
+		// Generate a new access token
+		const accessToken = jwt.sign(
+			{
+				first_name: user.firstName,
+				last_name: user.lastName,
+				email: user.email,
+			},
+			SECRET_KEY,
+			{ expiresIn: ACCESS_TOKEN_EXPIRY }
+		);
+
+		res.status(200).json({ accessToken });
+	});
+};
+
 const verifyOTP = async (req, res) => {
 	const { otp, email } = req.body;
 
 	try {
 		const user = await User.findOne({ email });
-		const token = generateToken({
+
+		const { refreshToken, accessToken } = generateToken({
 			first_name: user.firstName,
 			last_name: user.lastName,
 			email: user.email,
@@ -98,29 +134,37 @@ const verifyOTP = async (req, res) => {
 
 		await User.findOneAndUpdate({ email }, { otp: null });
 
-		res.cookie("token", token, {
+		res.cookie("refreshToken", refreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production", // Set secure to true only in production
 			sameSite: "None", // or 'lax' for cross-site
 			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 		});
-		res.status(200).json({ message: "Authenticated successfully" });
+		res
+			.status(200)
+			.json({ message: "Authenticated successfully", accessToken });
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
 };
 
-const getUser = async (req, res) => {
-	const token = req.cookies.token;
+const authenticate = (req, res, next) => {
+	const authHeader = req.headers["authorization"];
+	const token = authHeader && authHeader.split(" ")[1];
 
-	if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-	try {
-		const decoded = jwt.verify(token, SECRET_KEY);
-		res.status(201).json({ user: decoded });
-	} catch (error) {
-		res.status(404).json(error.message);
+	if (!token) {
+		return res.status(401).json({ message: "No token provided" });
 	}
+
+	jwt.verify(token, SECRET_KEY, (err, user) => {
+		if (err) {
+			console.log(err.message);
+			return res.status(403).json({ message: "Invalid token" });
+		}
+
+		req.user = user;
+		next();
+	});
 };
 
 const signout = (req, res) => {
@@ -135,5 +179,6 @@ module.exports = {
 	signin,
 	verifyOTP,
 	signout,
-	getUser,
+	authenticate,
+	refreshAccessToken,
 };
