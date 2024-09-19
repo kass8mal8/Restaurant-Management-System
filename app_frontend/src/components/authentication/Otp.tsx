@@ -1,6 +1,9 @@
 import { useEffect, useState, FC } from "react";
 import usePost from "../hooks/usePost";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 type OtpProps = {
 	email: string;
@@ -12,6 +15,7 @@ const Otp: FC<OtpProps> = ({ email }) => {
 	const url = "http://localhost:5000/api/auth/verify_otp";
 	const { post, loading } = usePost(url);
 	const navigate = useNavigate();
+	const { setUser } = useAuthContext();
 
 	const handleChange = (index: number, value: string) => {
 		const updatedOtp = [...otpCode];
@@ -31,10 +35,20 @@ const Otp: FC<OtpProps> = ({ email }) => {
 
 	const handleSubmit = async () => {
 		try {
-			await post({ otp, email });
+			const res = await post({ otp, email });
+			localStorage.setItem("accessToken", res.accessToken);
+
+			const profileRes = await axiosInstance.get("/auth/profile", {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+				},
+			});
+			setUser(profileRes.data.user);
 			navigate("/");
 		} catch (error) {
-			console.log(error);
+			if (axios.isAxiosError(error)) {
+				console.log(error.message);
+			}
 		}
 	};
 	const [encryptedEmail, setEncryptedEmail] = useState<string | null>(null);

@@ -1,29 +1,69 @@
-import { createContext, useContext, Dispatch, SetStateAction } from "react";
+import React, {
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	ReactNode,
+} from "react";
+import axiosInstance from "../utils/axiosInstance";
+import { useQuery } from "@tanstack/react-query";
 
-// Define the type for user details
+// Define the types
 type User = {
 	first_name: string;
 	last_name: string;
 	email: string;
 };
 
-// Define the type for AuthContext, including both user and setUser
 type AuthContextType = {
-	user: User | undefined;
-	setUser: Dispatch<SetStateAction<User | undefined>>;
+	user: User | null;
+	setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
-// Initialize the context with the correct type and provide a default value of undefined
-export const AuthContext = createContext<AuthContextType | undefined>(
-	undefined
-);
+// Create the context with a default value
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Custom hook to access the AuthContext
-// eslint-disable-next-line react-refresh/only-export-components
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+	const [user, setUser] = useState<User | null>(null);
+	const accessToken = localStorage.getItem("accessToken");
+
+	const fetchProfile = async () => {
+		try {
+			const res = await axiosInstance.get("/auth/profile", {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+			return res.data;
+		} catch (error) {
+			console.error("Error fetching profile:", error);
+		}
+	};
+	const { data } = useQuery({
+		queryKey: ["users"],
+		queryFn: fetchProfile,
+		enabled: accessToken !== null,
+		refetchOnWindowFocus: false,
+		refetchInterval: 60 * 60 * 1000, // Refresh token every hour (60 minutes * 60 seconds)
+	});
+	useEffect(() => {
+		if (data?.user) {
+			setUser(data.user);
+		}
+	}, [data?.user, setUser]);
+
+	return (
+		<AuthContext.Provider value={{ user, setUser }}>
+			{children}
+		</AuthContext.Provider>
+	);
+};
+
+// Custom hook to use the AuthContext
 export const useAuthContext = () => {
 	const context = useContext(AuthContext);
 	if (!context) {
-		throw new Error("useAuth must be used within AuthContextProvider");
+		throw new Error("useAuthContext must be used within an AuthProvider");
 	}
 	return context;
 };

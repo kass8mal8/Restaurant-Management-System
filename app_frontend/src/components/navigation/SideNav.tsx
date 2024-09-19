@@ -1,4 +1,9 @@
 import { useLocation } from "react-router-dom";
+import items from "../../assets/images/items.png";
+import bill from "../../assets/images/bill.png";
+import dashboard from "../../assets/images/dashboard.png";
+import reports from "../../assets/images/report.png";
+import orders from "../../assets/images/orders.png";
 // import usePost from "../hooks/usePost"
 
 const SideNav = () => {
@@ -23,8 +28,9 @@ const SideNav = () => {
 					className={`${
 						endpoints[0] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2] "
-					} mt-10 cursor-pointer p-2 rounded-r-lg pl-4`}
+					} mt-20 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
+					<img src={dashboard} alt="dashboard" className="w-5 h-5 opacity-55" />
 					<a href="/" className="">
 						Dashboard
 					</a>
@@ -33,32 +39,36 @@ const SideNav = () => {
 					className={`${
 						endpoints[1] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
-					} my-6 cursor-pointer p-2 rounded-r-lg pl-4`}
+					} my-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
+					<img src={items} alt="items" className="w-5 h-5 opacity-55" />
 					<a href="/items">Menu Items</a>
 				</li>
 				<li
 					className={`${
 						endpoints[1] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
-					} my-6 cursor-pointer p-2 rounded-r-lg pl-4`}
+					} my-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
+					<img src={orders} alt="orders" className="w-5 h-5" />
 					<a href="/orders">Orders</a>
 				</li>
 				<li
 					className={`${
 						endpoints[2] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
-					} mb-6 cursor-pointer p-2 rounded-r-lg pl-4`}
+					} mb-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
+					<img src={bill} alt="bill" className="w-5 h-5" />
 					<a href="/transactions">Transactions</a>
 				</li>
 				<li
 					className={`${
 						endpoints[3] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
-					} mt-6 cursor-pointer p-2 rounded-r-lg pl-4`}
+					} mt-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
+					<img src={reports} alt="reports" className="w-5 h-5" />
 					<a href="/reports">Reports</a>
 				</li>
 			</ul>
