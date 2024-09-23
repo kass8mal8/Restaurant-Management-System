@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
 	createContext,
 	useContext,
@@ -25,24 +26,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
-	const accessToken = localStorage.getItem("accessToken");
 
 	const fetchProfile = async () => {
 		try {
 			const res = await axiosInstance.get("/auth/profile", {
 				headers: {
-					Authorization: `Bearer ${accessToken}`,
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 				},
 			});
 			return res.data;
 		} catch (error) {
-			console.error("Error fetching profile:", error);
+			console.log("Error fetching profile:", error);
 		}
 	};
 	const { data } = useQuery({
 		queryKey: ["users"],
 		queryFn: fetchProfile,
-		enabled: accessToken !== null,
 		refetchOnWindowFocus: false,
 		refetchInterval: 60 * 60 * 1000, // Refresh token every hour (60 minutes * 60 seconds)
 	});
@@ -62,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 // Custom hook to use the AuthContext
 export const useAuthContext = () => {
 	const context = useContext(AuthContext);
-	if (!context) {
+	if (context === undefined) {
 		throw new Error("useAuthContext must be used within an AuthProvider");
 	}
 	return context;

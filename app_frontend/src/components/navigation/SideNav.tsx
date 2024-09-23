@@ -12,14 +12,7 @@ const SideNav = () => {
 	// const url = "http://localhost:5000/api/auth/signout"
 	// const {post} = usePost(url)
 
-	const handleLogOut = async () => {
-		// try {
-		// 	const res = await post()
-		// }
-		// catch(error) {
-		// 	if(error instanceof Error) console.log(error.message)
-		// }
-	};
+	const handleLogOut = async () => {};
 
 	return (
 		<div className="bg-white p-4 w-[15%] fixed left-0 top-0 h-[100lvh]">

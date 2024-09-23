@@ -1,15 +1,15 @@
-import { useEffect, useState, FC } from "react";
-import usePost from "../hooks/usePost";
+import { useEffect, useState } from "react";
+import usePost from "../../hooks/usePost";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 
 type OtpProps = {
 	email: string;
 };
 
-const Otp: FC<OtpProps> = ({ email }) => {
+const Otp = ({ email }: OtpProps) => {
 	const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
 	const [isComplete, setIsComplete] = useState(false);
 	const url = "http://localhost:5000/api/auth/verify_otp";

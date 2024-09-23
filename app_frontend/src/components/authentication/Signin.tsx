@@ -1,7 +1,8 @@
 import Introduction from "./Introduction";
-import usePost from "../hooks/usePost";
+import usePost from "../../hooks/usePost";
 import { useState, useRef, useEffect, FC } from "react";
 import Otp from "./Otp";
+import SubmitBtn from "./SubmitBtn";
 
 type User = {
 	email: string;
@@ -87,15 +88,7 @@ const Signin: FC = () => {
 							? "Network error"
 							: error?.message}
 					</p>
-					<button
-						type="submit"
-						className={`${
-							loading ? "bg-gray-300" : "bg-[#6163EF]"
-						} p-3  w-full text-white rounded-lg`}
-						disabled={loading || isDisabled}
-					>
-						{loading ? "processing..." : "submit"}
-					</button>
+					<SubmitBtn loading={loading} isDisabled={isDisabled} />
 				</form>
 			</div>
 			<dialog

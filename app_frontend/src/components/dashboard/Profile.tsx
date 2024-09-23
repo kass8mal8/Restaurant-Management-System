@@ -1,6 +1,6 @@
 // import axios from "axios";
 import { FC, useEffect } from "react";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../../context/AuthContext";
 // import { useQuery } from "@tanstack/react-query";
 import profile from "../../assets/images/user.png";
 // import { useNavigate } from "react-router-dom";
