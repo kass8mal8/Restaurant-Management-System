@@ -48,7 +48,7 @@ const signup = async (req, res) => {
 	const { firstName, lastName, email, password } = req.body;
 
 	try {
-		const user = await User.create({
+		await User.create({
 			email,
 			password,
 			firstName,
@@ -107,6 +107,7 @@ const refreshAccessToken = (req, res) => {
 				first_name: user.firstName,
 				last_name: user.lastName,
 				email: user.email,
+				id: user.id,
 			},
 			SECRET_KEY,
 			{ expiresIn: ACCESS_TOKEN_EXPIRY }
@@ -126,6 +127,7 @@ const verifyOTP = async (req, res) => {
 			first_name: user.firstName,
 			last_name: user.lastName,
 			email: user.email,
+			id: user.id,
 		});
 
 		const dbOTP = bcrypt.compareSync(otp, user.otp);
