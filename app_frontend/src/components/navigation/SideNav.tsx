@@ -8,7 +8,7 @@ import orders from "../../assets/images/orders.png";
 
 const SideNav = () => {
 	const location = useLocation();
-	const endpoints = ["/", "/orders", "/transactions", "/reports"];
+	const endpoints = ["/", "/items", "/orders", "/transactions", "/reports"];
 	// const url = "http://localhost:5000/api/auth/signout"
 	// const {post} = usePost(url)
 
@@ -39,7 +39,7 @@ const SideNav = () => {
 				</li>
 				<li
 					className={`${
-						endpoints[1] === location.pathname &&
+						endpoints[2] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
 					} my-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
@@ -48,7 +48,7 @@ const SideNav = () => {
 				</li>
 				<li
 					className={`${
-						endpoints[2] === location.pathname &&
+						endpoints[3] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
 					} mb-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
@@ -57,7 +57,7 @@ const SideNav = () => {
 				</li>
 				<li
 					className={`${
-						endpoints[3] === location.pathname &&
+						endpoints[4] === location.pathname &&
 						"bg-[#F1F1FF] border-l-4 border-l-[#8282F2]"
 					} mt-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>

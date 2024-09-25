@@ -1,13 +1,13 @@
 // import axios from "axios";
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import { useAuthContext } from "../../context/AuthContext";
 // import { useQuery } from "@tanstack/react-query";
 import profile from "../../assets/images/user.png";
 // import { useNavigate } from "react-router-dom";
 
-const Profile: FC = () => {
+const Profile = () => {
 	const { user } = useAuthContext();
-	console.log("User:", user);
+	console.log("Hello world");
 
 	useEffect(() => {}, [user]);
 

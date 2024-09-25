@@ -29,17 +29,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const fetchProfile = async () => {
 		try {
+			console.log("Fetching profile...");
 			const res = await axiosInstance.get("/auth/profile", {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 				},
 			});
+			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			console.log("Error fetching profile:", error);
 		}
 	};
-	const { data } = useQuery({
+	const { data, isLoading, error } = useQuery({
 		queryKey: ["users"],
 		queryFn: fetchProfile,
 		refetchOnWindowFocus: false,
@@ -50,6 +52,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setUser(data.user);
 		}
 	}, [data?.user, setUser]);
+
+	console.log("isLoading:", isLoading); // <-- Check if it's loading
+	console.log("Error:", error); // <-- Check if there is an error
+	console.log("Data:", data);
 
 	return (
 		<AuthContext.Provider value={{ user, setUser }}>
