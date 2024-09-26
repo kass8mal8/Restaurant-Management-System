@@ -176,6 +176,19 @@ const signout = (req, res) => {
 	res.status(200).json({ message: "Logged out successfully" });
 };
 
+const getUser = async (req, res) => {
+	try {
+		const user = await User.find({});
+		if (user) {
+			res.status(200).json({ user });
+		} else {
+			res.status(404).json({ message: "User not found" });
+		}
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
 module.exports = {
 	signup,
 	signin,
@@ -183,4 +196,5 @@ module.exports = {
 	signout,
 	authenticate,
 	refreshAccessToken,
+	getUser,
 };

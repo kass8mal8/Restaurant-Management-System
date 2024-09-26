@@ -6,6 +6,7 @@ const {
 	signout,
 	authenticate,
 	refreshAccessToken,
+	getUser,
 } = require("../controllers/auth");
 const router = Router();
 
@@ -17,5 +18,6 @@ router.get("/refresh_token", refreshAccessToken);
 router.get("/profile", authenticate, (req, res) => {
 	res.json({ user: req.user });
 });
+router.get("/users", getUser);
 
 module.exports = router;

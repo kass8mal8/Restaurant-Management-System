@@ -20,6 +20,7 @@ const addOrder = async (req, res) => {
 const getOrder = async (req, res) => {
 	try {
 		const order = await Order.find({});
+		console.log(order);
 		order.length > 0
 			? res.json(order).status(201)
 			: res.json("Not Found").status(404);
