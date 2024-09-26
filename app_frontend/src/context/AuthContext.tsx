@@ -41,21 +41,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			console.log("Error fetching profile:", error);
 		}
 	};
-	const { data, isLoading, error } = useQuery({
+	const { data } = useQuery({
 		queryKey: ["users"],
 		queryFn: fetchProfile,
-		refetchOnWindowFocus: false,
-		refetchInterval: 60 * 60 * 1000, // Refresh token every hour (60 minutes * 60 seconds)
 	});
 	useEffect(() => {
 		if (data?.user) {
 			setUser(data.user);
 		}
 	}, [data?.user, setUser]);
-
-	console.log("isLoading:", isLoading); // <-- Check if it's loading
-	console.log("Error:", error); // <-- Check if there is an error
-	console.log("Data:", data);
 
 	return (
 		<AuthContext.Provider value={{ user, setUser }}>

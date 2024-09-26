@@ -1,18 +1,15 @@
-import useFetch from "../../hooks/useFEtch";
-import { useQuery } from "@tanstack/react-query";
+import OrderList from "./OrderList";
+import useFetch from "../../hooks/useFetch";
+import OrderHeader from "./OrderHeader";
 
 const Order = () => {
-	const { fetch } = useFetch("/orders");
-	const { data, isLoading, error } = useQuery({
-		queryKey: ["users"],
-		queryFn: fetch,
-		refetchOnWindowFocus: false,
-		refetchInterval: 60 * 60 * 1000, // Refresh token every hour (60 minutes * 60 seconds)
-	});
-
-	console.log(data);
-
-	return <div>Hello world</div>;
+	const { data, isLoading, error } = useFetch("/orders", "orders");
+	return (
+		<div className="ml-[17%] mt-[7%] w-[82%]">
+			<OrderHeader data={data} />
+			<OrderList data={data} />
+		</div>
+	);
 };
 
 export default Order;

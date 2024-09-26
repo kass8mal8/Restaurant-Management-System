@@ -1,22 +1,31 @@
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/axiosInstance";
+import { isAxiosError } from "axios";
 
-const useFetch = (endpoint: string) => {
+const useFetch = (endpoint: string, queryKey: string) => {
+	console.log(endpoint, queryKey);
 	const fetch = async () => {
 		try {
-			console.log("Fetching profile...");
-			const res = await axiosInstance.get(endpoint, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-				},
-			});
-			console.log(res.data);
-			return res.data;
+			const res = await axiosInstance.get(endpoint);
+			console.log("Response:", res);
+			if (res.data) {
+				return res.data;
+			} else {
+				throw new Error("No data returned from the server.");
+			}
 		} catch (error) {
-			console.log("Error fetching profile:", error);
+			if (isAxiosError(error)) {
+				throw new Error(error.response?.data?.message || error.message);
+			}
 		}
 	};
 
-	return { fetch };
+	const { data, isLoading, error } = useQuery({
+		queryKey: [queryKey],
+		queryFn: fetch, // Refresh token every hour (60 minutes * 60 seconds)
+	});
+
+	return { data, isLoading, error };
 };
 
 export default useFetch;
