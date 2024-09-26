@@ -3,7 +3,6 @@ import axiosInstance from "../utils/axiosInstance";
 import { isAxiosError } from "axios";
 
 const useFetch = (endpoint: string, queryKey: string) => {
-	console.log(endpoint, queryKey);
 	const fetch = async () => {
 		try {
 			const res = await axiosInstance.get(endpoint);
