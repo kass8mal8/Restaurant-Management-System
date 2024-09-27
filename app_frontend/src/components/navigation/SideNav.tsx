@@ -4,6 +4,7 @@ import bill from "../../assets/images/bill.png";
 import dashboard from "../../assets/images/dashboard.png";
 import reports from "../../assets/images/report.png";
 import orders from "../../assets/images/orders.png";
+import { Link } from "react-router-dom";
 // import usePost from "../hooks/usePost"
 
 const SideNav = () => {
@@ -24,9 +25,9 @@ const SideNav = () => {
 					} mt-20 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
 					<img src={dashboard} alt="dashboard" className="w-5 h-5 opacity-55" />
-					<a href="/" className="">
+					<Link to="/" className="">
 						Dashboard
-					</a>
+					</Link>
 				</li>
 				<li
 					className={`${
@@ -35,7 +36,7 @@ const SideNav = () => {
 					} my-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
 					<img src={items} alt="items" className="w-5 h-5 opacity-55" />
-					<a href="/items">Menu Items</a>
+					<Link to="/items">Menu Items</Link>
 				</li>
 				<li
 					className={`${
@@ -44,7 +45,7 @@ const SideNav = () => {
 					} my-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
 					<img src={orders} alt="orders" className="w-5 h-5" />
-					<a href="/orders">Orders</a>
+					<Link to="/orders">Orders</Link>
 				</li>
 				<li
 					className={`${
@@ -53,7 +54,7 @@ const SideNav = () => {
 					} mb-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
 					<img src={bill} alt="bill" className="w-5 h-5" />
-					<a href="/transactions">Transactions</a>
+					<Link to="/transactions">Transactions</Link>
 				</li>
 				<li
 					className={`${
@@ -62,7 +63,7 @@ const SideNav = () => {
 					} mt-6 cursor-pointer p-2 rounded-r-lg pl-4 flex space-x-3 items-center`}
 				>
 					<img src={reports} alt="reports" className="w-5 h-5" />
-					<a href="/reports">Reports</a>
+					<Link to="/reports">Reports</Link>
 				</li>
 			</ul>
 			<button

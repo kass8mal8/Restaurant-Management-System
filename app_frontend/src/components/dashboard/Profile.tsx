@@ -7,12 +7,12 @@ import profile from "../../assets/images/user.png";
 
 const Profile = () => {
 	const { user } = useAuthContext();
-	console.log("Hello world");
+	console.log("First name", user?.first_name);
 
 	useEffect(() => {}, [user]);
 
 	return (
-		<div className="flex space-x-3 p-2 rounded-lg items-center border w-40 float-right">
+		<div className="flex space-x-3 p-2 rounded-lg items-center border min-w-[150px] float-right">
 			<img src={profile} alt="user profile" className="w-6 h-6" />
 			<p>
 				{user?.first_name} {user?.last_name}

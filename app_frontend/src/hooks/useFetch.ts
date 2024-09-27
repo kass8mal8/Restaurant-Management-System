@@ -6,7 +6,6 @@ const useFetch = (endpoint: string, queryKey: string) => {
 	const fetch = async () => {
 		try {
 			const res = await axiosInstance.get(endpoint);
-			console.log("Response:", res);
 			if (res.data) {
 				return res.data;
 			} else {
