@@ -16,40 +16,44 @@ type OrderProps = {
 	data: Order[];
 };
 
-// type users = {
-// 	users: [];
-// };
+type users = {
+	_id: string;
+	firstName: string;
+	lastName: string;
+};
 
 const OrderList = ({ data }: OrderProps) => {
-	// const { data: userData } = useFetch("/auth/users", "users");
+	const { data: userData } = useFetch("/auth/users", "users");
 
-	// const [users, setUsers] = useState<users | null>(null);
+	const users = data?.map((item) => {
+		const userOne = userData?.user.find(
+			(user: users) => user._id === item.userId
+		);
 
-	// useEffect(() => {
-	// 	data?.forEach((item) => {
-	// 		const users = userData?.user.filter((user) => user._id === item.userId);
-	// 		console.log("Users:", users);
-	// 		setUsers((prevUsers) => users, ...prevUsers );
-	// 	});
-	// }, [data, userData]);
+		return {
+			username: `${userOne?.firstName} ${userOne?.lastName}`,
+		};
+	});
+
+	console.log("Users:", users);
 
 	return (
 		<>
-			{data?.map((item) => (
-				<div
+			{data?.map((item, index) => (
+				<ul
 					key={item._id}
-					className="flex justify-between mt-2 border-b py-2 px-4 hover:bg-gray-100"
+					className="flex justify-between border-b py-2 px-4 hover:bg-gray-100 text-slate-700"
 				>
-					<p>{item._id.slice(-5)}</p>
-					<p>
+					<li className="border-r pr-8">#{item._id.slice(-5)}</li>
+					<li className="text-center border-r pr-8 -ml-12">
 						{new Date(item.orderDate).toLocaleDateString("en-US", {
 							day: "numeric",
 							month: "short",
 							year: "numeric",
 						})}
-					</p>
-					<p>{"John Doe"}</p>
-					<p
+					</li>
+					<li className="-ml-12">{users[index].username}</li>
+					<li
 						className={`${
 							item.status === "Pending"
 								? "bg-orange-100 border-2 text-orange-500 border-orange-300"
@@ -57,10 +61,11 @@ const OrderList = ({ data }: OrderProps) => {
 						} px-3 py-1 rounded text-sm`}
 					>
 						{item.status}
-					</p>
-					<p>Ksh {item.totalPrice}</p>
-					<p>{item.products.length}</p>
-				</div>
+					</li>
+					<li>Ksh {item.totalPrice}</li>
+					<li>{item.products.length} Items</li>
+					<li>Delete </li>
+				</ul>
 			))}
 		</>
 	);
