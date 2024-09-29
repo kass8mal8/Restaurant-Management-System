@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Introduction from "./Introduction";
 import { useState, FC } from "react";
 import usePost from "../../hooks/usePost";
+import SubmitBtn from "./SubmitBtn";
 
 type UserDetails = object;
 
@@ -60,17 +61,11 @@ const Signup: FC = () => {
 					type="password"
 					name="password"
 					placeholder="password"
+					minLength={8}
 					onChange={handleChange}
 					className="border mb-4 p-3 rounded-lg w-full"
 				/>
-				<button
-					type="submit"
-					className={`${
-						loading ? "bg-gray-300" : "bg-[#6163EF]"
-					} p-3  w-full text-white rounded-lg`}
-				>
-					{loading ? "processing..." : "submit"}
-				</button>
+				<SubmitBtn loading={loading} />
 			</form>
 			<p className="mt-3 ml-4 text-gray-400">
 				Already have an account? <Link to="/signin">Signin</Link>

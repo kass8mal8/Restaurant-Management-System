@@ -11,6 +11,7 @@ const usePost = (url: string) => {
 				headers: {
 					"Content-Type": "application/json",
 				},
+				withCredentials: true,
 			});
 
 			return res.data;

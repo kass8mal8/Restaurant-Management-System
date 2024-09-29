@@ -2,14 +2,21 @@ import Introduction from "./Introduction";
 import usePost from "../../hooks/usePost";
 import { useState, useRef, useEffect, FC } from "react";
 import Otp from "./Otp";
+import SubmitBtn from "./SubmitBtn";
 
-type UserDetails = {
+type User = {
 	email: string;
 	password: string;
 };
 
 const Signin: FC = () => {
-	const [userDetails, setUserDetails] = useState<UserDetails>({
+	const url: string = "http://localhost:5000/api/auth/signin";
+	const { post, loading } = usePost(url);
+	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const [error, setError] = useState<Error | null>(null);
+
+	const [userDetails, setUserDetails] = useState<User>({
 		email: "",
 		password: "",
 	});
@@ -19,12 +26,6 @@ const Signin: FC = () => {
 			[e.target.name]: e.target.value,
 		});
 	};
-
-	const url: string = "http://localhost:5000/api/auth/signin";
-	const { post, loading } = usePost(url);
-	const modalRef = useRef<HTMLDialogElement>();
-	const [isOpen, setIsOpen] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -79,22 +80,15 @@ const Signin: FC = () => {
 						name="password"
 						placeholder="password"
 						onChange={handleChange}
-						className="border focus:outline-none mb-4 p-3 rounded-lg w-full"
+						minLength={8}
+						className="border user-invalid:border-red-200 focus:outline-none mb-4 p-3 rounded-lg w-full"
 					/>
 					<p className="text-red-500 my-2">
 						{error?.message.includes("smtp.gmail.com")
 							? "Network error"
 							: error?.message}
 					</p>
-					<button
-						type="submit"
-						className={`${
-							loading ? "bg-gray-300" : "bg-[#6163EF]"
-						} p-3  w-full text-white rounded-lg`}
-						disabled={loading || isDisabled}
-					>
-						{loading ? "processing..." : "submit"}
-					</button>
+					<SubmitBtn loading={loading} isDisabled={isDisabled} />
 				</form>
 			</div>
 			<dialog
