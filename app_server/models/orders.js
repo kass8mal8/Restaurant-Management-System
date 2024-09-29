@@ -16,6 +16,13 @@ const orderSchema = new Schema({
 		...objectOptions,
 		ref: "User",
 	},
+	// adminId: {
+	// 	...objectOptions,
+	// },
+	userId: {
+		...objectOptions,
+		ref: "User",
+	},
 	products: [
 		{
 			productName: {
