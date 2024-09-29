@@ -1,9 +1,14 @@
 import Order from "./Order";
+import moment from "moment";
 
 type Order = {
 	_id: string;
 	orderDate: string;
-	products: object[];
+	products: {
+		productName: string;
+		productPrice: number;
+		productQuantity: number;
+	}[];
 	totalPrice: number;
 	status: string;
 	userId: string;
@@ -14,31 +19,81 @@ type OrderProps = {
 };
 
 const OrderHeader = ({ data }: OrderProps) => {
-	const totalProductQuantity = data?.reduce((total, item) => {
-		const orderProductQuantity = item?.products.reduce(
-			(orderTotal, product) => orderTotal + product?.productQuantity,
-			0
-		);
-		return total + orderProductQuantity;
-	}, 0);
+	const items = data?.map((item) => item.products);
+	const totalQuantity = items?.map((item) => item.length);
+
+	const totalProductQuantity = totalQuantity?.reduce((a, b) => a + b, 0);
 
 	const completedOrders = data?.filter((item) => item.status !== "Pending");
 
+	// Get orders for last week
+	const lastWeekOrders = data?.filter((item) =>
+		moment(item.orderDate).isBetween(
+			moment().subtract(1, "week"),
+			moment().startOf("week"),
+			null,
+			"[]"
+		)
+	);
+
+	// Get orders for this week
+	const thisWeekOrders = data?.filter((item) =>
+		moment(item.orderDate).isBetween(
+			moment().startOf("week"),
+			moment(),
+			null,
+			"[]"
+		)
+	);
+
+	const thisWeekItems = thisWeekOrders?.map((item) => item.products);
+	const lastWeekItems = lastWeekOrders?.map((item) => item.products);
+	const itemsDiff =
+		thisWeekItems && lastWeekItems
+			? thisWeekItems[0]?.length - lastWeekItems[0]?.length
+			: 0;
+
+	const itemsDivisor =
+		itemsDiff > 0
+			? itemsDiff / totalProductQuantity
+			: Math.abs(itemsDiff) / totalProductQuantity;
+	const itemsPercentage = (itemsDivisor * 100).toFixed(2);
+
+	const orderDiff = thisWeekOrders?.length - lastWeekOrders?.length;
+	console.log("Last week", lastWeekOrders);
+	const orderDivisor =
+		orderDiff > 0
+			? orderDiff / data?.length
+			: Math.abs(orderDiff) / data?.length;
+	const percentage = (orderDivisor * 100).toFixed(2);
+
 	return (
-		<div className="flex space-x-4">
-			<div className="py-2 px-4 rounded-lg border w-[20%]">
-				<p className="text-slate-700">Total orders </p>
-				<p className="text-3xl font-bold my-2">{data?.length} - </p>
+		<div className="flex justify-between">
+			<div className="py-2 px-4 rounded-lg border w-[30%]">
+				<p className="text-gray-600">Total orders </p>
+				<p className="text-3xl font-bold my-2 text-gray-600">
+					{data?.length} -{" "}
+				</p>
+				<p className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}>
+					{orderDiff > 0 ? `+${percentage}` : `-${percentage}`}% Last week
+				</p>
 			</div>
-			<div className="py-2 px-4 rounded-lg border w-[20%]">
-				<p className="text-slate-700">Order Items </p>
-				<p className="text-3xl font-bold my-2">{totalProductQuantity} - </p>
+			<div className="py-2 px-4 rounded-lg border w-[30%]">
+				<p className="text-gray-600">Order Items over time </p>
+				<p className="text-3xl font-bold my-2 text-gray-600">
+					{totalProductQuantity} -{" "}
+				</p>
+				<p className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}>
+					{itemsDiff > 0 ? `+${itemsPercentage}` : `-${itemsPercentage}`}% Last
+					week
+				</p>
 			</div>
-			<div className="py-2 px-4 rounded-lg border w-[20%]">
-				<p className="text-slate-700">Completed Orders </p>
-				<p className="text-3xl font-bold my-2">{completedOrders?.length} - </p>
+			<div className="py-2 px-4 rounded-lg border w-[30%]">
+				<p className="text-gray-600">Completed Orders </p>
+				<p className="text-3xl font-bold my-2 text-gray-600">
+					{completedOrders?.length} -{" "}
+				</p>
 			</div>
-			<p className="bg-gray-200 py-1 px-3 rounded">Export</p>
 		</div>
 	);
 };
