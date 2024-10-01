@@ -16,7 +16,7 @@ const Signup: FC = () => {
 	};
 	const navigate = useNavigate();
 
-	const url: string = "http://localhost:5000/api/auth/signup";
+	const url: string = "/auth/signup";
 	const { post, loading } = usePost(url);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

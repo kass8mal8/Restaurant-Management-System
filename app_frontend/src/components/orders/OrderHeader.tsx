@@ -80,7 +80,7 @@ const OrderHeader = ({ data }: OrderProps) => {
 				)}
 				{orderDiff ? (
 					<p
-						className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}
+						className={`${itemsDiff >= 0 ? "text-green-300" : "text-red-300"} `}
 					>
 						{orderDiff > 0 ? `+${percentage}` : `-${percentage}`}% Last week
 					</p>

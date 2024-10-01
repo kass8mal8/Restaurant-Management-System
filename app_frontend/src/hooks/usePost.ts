@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const usePost = (url: string) => {
 	const [loading, setLoading] = useState(false);
@@ -7,7 +8,7 @@ const usePost = (url: string) => {
 	const post = async (body: object | null) => {
 		setLoading(true);
 		try {
-			const res = await axios.post(url, body, {
+			const res = await axiosInstance.post(url, body, {
 				headers: {
 					"Content-Type": "application/json",
 				},

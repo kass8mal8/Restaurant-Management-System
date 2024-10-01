@@ -1,6 +1,8 @@
 import options from "../../assets/images/options.png";
 import { useState } from "react";
 import OrderSkeleton from "./OrderSkeleton";
+import axiosInstance from "../../utils/axiosInstance";
+import { QueryClient } from "@tanstack/react-query";
 
 type Order = {
 	_id: string;
@@ -22,6 +24,21 @@ const OrderList = ({ data }: OrderProps) => {
 		(a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
 	);
 	const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+
+	const queryClient = new QueryClient();
+	const refetchOrders = () =>
+		queryClient.invalidateQueries({ queryKey: ["orders"] });
+
+	const handleOrderUpdate = async (orderId: string) => {
+		try {
+			await axiosInstance.put(`/orders/update/${orderId}`, {
+				status: "Completed",
+			});
+			refetchOrders();
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<>
@@ -76,9 +93,18 @@ const OrderList = ({ data }: OrderProps) => {
 
 						{item._id === selectedOrderId && (
 							<ul className="absolute my-2 text-sm rounded right-0 bg-white z-30">
-								<li className="p-2 hover:bg-gray-200">Mark completed</li>
-								<li className="p-2 border-y hover:bg-gray-200">View</li>
-								<li className="p-2 hover:bg-gray-200">Delete</li>
+								{item.status === "Pending" && (
+									<li
+										className="p-2 hover:bg-gray-200 cursor-pointer"
+										onClick={() => handleOrderUpdate(item._id)}
+									>
+										Mark completed
+									</li>
+								)}
+								<li className="p-2 border-y hover:bg-gray-200 cursor-pointer">
+									View
+								</li>
+								<li className="p-2 hover:bg-gray-200 cursor-pointer">Delete</li>
 							</ul>
 						)}
 					</ul>

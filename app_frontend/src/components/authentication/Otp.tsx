@@ -12,7 +12,7 @@ type OtpProps = {
 const Otp = ({ email }: OtpProps) => {
 	const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
 	const [isComplete, setIsComplete] = useState(false);
-	const url = "http://localhost:5000/api/auth/verify_otp";
+	const url = "/auth/verify_otp";
 	const { post, loading } = usePost(url);
 	const navigate = useNavigate();
 	const { setUser } = useAuthContext();
