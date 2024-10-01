@@ -16,9 +16,11 @@ const orderSchema = new Schema({
 		...objectOptions,
 		ref: "User",
 	},
-	// adminId: {
-	// 	...objectOptions,
-	// },
+	telephone: {
+		type: String,
+		required: true,
+		match: /^0\d{9}$/, // Regex to validate phone numbers in the format 0712345678
+	},
 	userId: {
 		...objectOptions,
 		ref: "User",

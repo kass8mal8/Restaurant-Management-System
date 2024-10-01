@@ -2,11 +2,16 @@ const Order = require("../models/orders");
 
 const addOrder = async (req, res) => {
 	// products in request body is an array
-	const { products, totalPrice } = req.body;
+	const { products, totalPrice, telephone } = req.body;
 	const { userId } = req.params;
 
 	try {
-		const order = await Order.create({ userId, products, totalPrice });
+		const order = await Order.create({
+			userId,
+			products,
+			totalPrice,
+			telephone,
+		});
 		if (order) {
 			res.json({ message: "Order placed successfully" }).status(201);
 		}

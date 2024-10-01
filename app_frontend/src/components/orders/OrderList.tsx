@@ -1,6 +1,3 @@
-import useFetch from "../../hooks/useFetch";
-// import printer from "../../assets/images/printer.png";
-// import deleteIcon from "../../assets/images/delete.png";
 import options from "../../assets/images/options.png";
 import { useState } from "react";
 import OrderSkeleton from "./OrderSkeleton";
@@ -12,43 +9,26 @@ type Order = {
 	totalPrice: number;
 	status: string;
 	userId: string;
+	telephone: number;
 };
 
 type OrderProps = {
 	data: Order[];
 };
 
-type User = {
-	_id: string;
-	firstName: string;
-	lastName: string;
-};
-
 const OrderList = ({ data }: OrderProps) => {
-	const { data: userData } = useFetch("/auth/users", "users");
-
 	// Sort orders by orderDate in descending order (most recent first)
 	const sortedOrders = data?.sort(
 		(a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
 	);
 	const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-	const users = sortedOrders?.map((item) => {
-		const userOne = userData?.user?.find(
-			(user: User) => user._id === item.userId
-		);
-
-		return {
-			username: `${userOne?.firstName} ${userOne?.lastName}`,
-		};
-	});
-
 	return (
 		<>
 			{!sortedOrders ? (
 				<OrderSkeleton />
 			) : (
-				sortedOrders?.map((item, index) => (
+				sortedOrders?.map((item) => (
 					<ul
 						key={item._id}
 						className="flex justify-between items-center border-b py-2 px-4 hover:bg-gray-100 text-slate-700 relative"
@@ -65,7 +45,7 @@ const OrderList = ({ data }: OrderProps) => {
 							})}
 						</li>
 
-						<li className="min-w-[150px] border-r">{users[index]?.username}</li>
+						<li className="min-w-[150px] border-r">{item?.telephone}</li>
 
 						<li
 							className={`${

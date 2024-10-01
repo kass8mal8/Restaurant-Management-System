@@ -37,7 +37,7 @@ const Order = () => {
 				<ul className="flex justify-between bg-gray-200 py-2 px-4 rounded-t mb-2 opacity-60 font-semibold">
 					<li>Order</li>
 					<li>Date</li>
-					<li>Customer</li>
+					<li>Telephone</li>
 					<li>Status</li>
 					<li>Total</li>
 					<li>Items</li>
