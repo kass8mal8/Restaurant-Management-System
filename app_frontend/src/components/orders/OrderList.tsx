@@ -11,7 +11,7 @@ type Order = {
 	totalPrice: number;
 	status: string;
 	userId: string;
-	telephone: number;
+	telephone: string;
 };
 
 type OrderProps = {
@@ -83,7 +83,7 @@ const OrderList = ({ data }: OrderProps) => {
 						</li>
 
 						<li
-							className="min-w-[60px] cursor-pointer text-center flex justify-between opacity-55"
+							className="min-w-[60px] cursor-pointer p-2 text-center flex justify-between opacity-55"
 							onClick={() => setSelectedOrderId(item._id)}
 						>
 							{/* <img src={deleteIcon} alt="delete" className="w-4 h-4" />
@@ -92,7 +92,7 @@ const OrderList = ({ data }: OrderProps) => {
 						</li>
 
 						{item._id === selectedOrderId && (
-							<ul className="absolute my-2 text-sm rounded right-0 bg-white z-30">
+							<ul className="absolute my-2 text-sm rounded right-0 bg-white z-30 shadow-md">
 								{item.status === "Pending" && (
 									<li
 										className="p-2 hover:bg-gray-200 cursor-pointer"

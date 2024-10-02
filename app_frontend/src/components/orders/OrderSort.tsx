@@ -7,6 +7,7 @@ type Order = {
 	totalPrice: number;
 	status: string;
 	userId: string;
+	telephone: string;
 };
 
 type OrderSortProps = {
