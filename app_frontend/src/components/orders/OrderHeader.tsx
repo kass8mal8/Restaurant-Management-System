@@ -71,28 +71,52 @@ const OrderHeader = ({ data }: OrderProps) => {
 		<div className="flex justify-between">
 			<div className="py-2 px-4 rounded-lg border w-[30%]">
 				<p className="text-gray-600">Total orders </p>
-				<p className="text-3xl font-bold my-2 text-gray-600">
-					{data?.length} -{" "}
-				</p>
-				<p className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}>
-					{orderDiff > 0 ? `+${percentage}` : `-${percentage}`}% Last week
-				</p>
+				{data ? (
+					<p className="text-3xl font-bold my-2 text-gray-600">
+						{data?.length} -{" "}
+					</p>
+				) : (
+					<p className="animate-pulse w-12 h-6 bg-gray-200 my-2"></p>
+				)}
+				{orderDiff ? (
+					<p
+						className={`${itemsDiff >= 0 ? "text-green-300" : "text-red-300"} `}
+					>
+						{orderDiff > 0 ? `+${percentage}` : `-${percentage}`}% Last week
+					</p>
+				) : (
+					<p className="animate-pulse w-40 h-6 bg-gray-200 my-2"></p>
+				)}
 			</div>
 			<div className="py-2 px-4 rounded-lg border w-[30%]">
 				<p className="text-gray-600">Order Items over time </p>
-				<p className="text-3xl font-bold my-2 text-gray-600">
-					{totalProductQuantity} -{" "}
-				</p>
-				<p className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}>
-					{itemsDiff > 0 ? `+${itemsPercentage}` : `-${itemsPercentage}`}% Last
-					week
-				</p>
+				{totalProductQuantity ? (
+					<p className="text-3xl font-bold my-2 text-gray-600">
+						{totalProductQuantity} -{" "}
+					</p>
+				) : (
+					<p className="animate-pulse w-12 h-6 bg-gray-200 my-2"></p>
+				)}
+				{itemsDiff ? (
+					<p
+						className={`${itemsDiff > 0 ? "text-green-300" : "text-red-300"} `}
+					>
+						{itemsDiff > 0 ? `+${itemsPercentage}` : `-${itemsPercentage}`}%
+						Last week
+					</p>
+				) : (
+					<p className="animate-pulse w-40 h-6 bg-gray-200 my-2"></p>
+				)}
 			</div>
 			<div className="py-2 px-4 rounded-lg border w-[30%]">
 				<p className="text-gray-600">Completed Orders </p>
-				<p className="text-3xl font-bold my-2 text-gray-600">
-					{completedOrders?.length} -{" "}
-				</p>
+				{completedOrders ? (
+					<p className="text-3xl font-bold my-2 text-gray-600">
+						{completedOrders?.length} -{" "}
+					</p>
+				) : (
+					<p className="animate-pulse w-12 h-6 bg-gray-200 my-2"></p>
+				)}
 			</div>
 		</div>
 	);

@@ -10,7 +10,7 @@ type User = {
 };
 
 const Signin: FC = () => {
-	const url: string = "http://localhost:5000/api/auth/signin";
+	const url: string = "/auth/signin";
 	const { post, loading } = usePost(url);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const [isOpen, setIsOpen] = useState(false);
