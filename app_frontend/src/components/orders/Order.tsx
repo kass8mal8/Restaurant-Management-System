@@ -10,6 +10,8 @@ const Order = () => {
 	const [status, setStatus] = useState<string>("");
 
 	const statuses = ["Pending", "Completed"];
+
+	// Filter the orders according to their status i.e pending or completed
 	useEffect(() => {
 		if (statuses.includes(status)) {
 			const index = statuses.indexOf(status);

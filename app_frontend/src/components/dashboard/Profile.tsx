@@ -7,7 +7,6 @@ import profile from "../../assets/images/user.png";
 
 const Profile = () => {
 	const { user } = useAuthContext();
-	console.log("First name", user?.first_name);
 
 	useEffect(() => {}, [user]);
 
