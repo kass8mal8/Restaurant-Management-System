@@ -49,7 +49,7 @@ const OrderHeader = ({ data }: OrderProps) => {
 	const thisWeekItems = thisWeekOrders?.map((item) => item.products);
 	const lastWeekItems = lastWeekOrders?.map((item) => item.products);
 	const itemsDiff =
-		thisWeekItems && lastWeekItems
+		thisWeekItems?.length > 0 && lastWeekItems?.length > 0
 			? thisWeekItems[0]?.length - lastWeekItems[0]?.length
 			: 0;
 
@@ -60,7 +60,7 @@ const OrderHeader = ({ data }: OrderProps) => {
 	const itemsPercentage = (itemsDivisor * 100).toFixed(2);
 
 	const orderDiff = thisWeekOrders?.length - lastWeekOrders?.length;
-	console.log("Last week", lastWeekOrders);
+
 	const orderDivisor =
 		orderDiff > 0
 			? orderDiff / data?.length

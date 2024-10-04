@@ -15,7 +15,7 @@ type OrderSortProps = {
 	statuses: string[];
 	status: string; // Current selected status (All, Pending, Completed)
 	data: Order[];
-	setData: (data: Order) => void;
+	setData: (data: Order[]) => void;
 };
 
 const OrderSort = ({
