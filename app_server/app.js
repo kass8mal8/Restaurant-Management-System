@@ -35,8 +35,10 @@ app.use(cookieParser());
 
 const authRoute = require("./routes/auth");
 const orderRoute = require("./routes/orders");
+const itemRoute = require("./routes/items");
 
 app.use("/api/auth", authRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/items", itemRoute);
 
 module.exports = app;

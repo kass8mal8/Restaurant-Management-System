@@ -21,10 +21,6 @@ const SearchOrder = ({ data, setData }: OrderProps) => {
 	const [telephone, setTelephone] = useState<string>("");
 	const [tempOrders] = useState(data);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTelephone(e.target.value);
-	};
-
 	useEffect(() => {
 		const orders = tempOrders?.filter((order: { telephone: string }) => {
 			if (order.telephone.includes(telephone)) return order;
@@ -43,7 +39,9 @@ const SearchOrder = ({ data, setData }: OrderProps) => {
 				type="text"
 				placeholder="search phone number"
 				name="telephone"
-				onChange={handleChange}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+					setTelephone(e.target.value)
+				}
 				className="border pl-10 p-2  rounded-lg focus:outline-none"
 			/>
 		</div>
