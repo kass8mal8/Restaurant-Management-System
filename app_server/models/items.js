@@ -19,9 +19,9 @@ const itemSchema = new Schema({
 		ref: "User",
 	},
 	inStock: {
-		type: Schema.Types.Boolean,
-		enum: [true, false],
-		default: true,
+		type: Schema.Types.String,
+		enum: ["true", "false"],
+		default: "true",
 	},
 });
 

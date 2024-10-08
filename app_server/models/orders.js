@@ -12,10 +12,6 @@ const objectOptions = {
 };
 
 const orderSchema = new Schema({
-	userId: {
-		...objectOptions,
-		ref: "User",
-	},
 	telephone: {
 		type: String,
 		required: true,
