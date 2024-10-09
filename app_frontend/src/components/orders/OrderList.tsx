@@ -3,6 +3,7 @@ import { useState } from "react";
 import OrderSkeleton from "./OrderSkeleton";
 import axiosInstance from "../../utils/axiosInstance";
 import { QueryClient } from "@tanstack/react-query";
+import OrderCard from "./OrderCard";
 
 type Order = {
 	_id: string;
@@ -24,6 +25,7 @@ const OrderList = ({ data }: OrderProps) => {
 		(a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
 	);
 	const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const queryClient = new QueryClient();
 	const refetchOrders = () =>
@@ -39,6 +41,9 @@ const OrderList = ({ data }: OrderProps) => {
 			console.error(error);
 		}
 	};
+	const [viewId, setViewId] = useState<string>("");
+	// console.log(viewId);
+	console.log(isOpen);
 
 	return (
 		<>
@@ -101,12 +106,24 @@ const OrderList = ({ data }: OrderProps) => {
 										Mark completed
 									</li>
 								)}
-								<li className="p-2 border-y hover:bg-gray-200 cursor-pointer">
+								<li
+									className="p-2 border-y hover:bg-gray-200 cursor-pointer"
+									onClick={() => {
+										setViewId(item._id);
+										setIsOpen(true);
+									}}
+								>
 									View
 								</li>
 								<li className="p-2 hover:bg-gray-200 cursor-pointer">Delete</li>
 							</ul>
 						)}
+						<OrderCard
+							orders={data}
+							id={viewId}
+							isOpen={isOpen}
+							setIsOpen={setIsOpen}
+						/>
 					</ul>
 				))
 			)}
