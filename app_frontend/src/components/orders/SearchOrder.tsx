@@ -21,18 +21,12 @@ const SearchOrder = ({ data, setData }: OrderProps) => {
 	const [telephone, setTelephone] = useState<string>("");
 	const [tempOrders] = useState(data);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTelephone(e.target.value);
-	};
-	console.log(telephone);
-
 	useEffect(() => {
 		const orders = tempOrders?.filter((order: { telephone: string }) => {
 			if (order.telephone.includes(telephone)) return order;
 		});
 		setData(orders);
-		console.log("Filtered orders", orders);
-	}, [telephone]);
+	}, [telephone, tempOrders, setData]);
 
 	return (
 		<div className="relative">
@@ -45,8 +39,9 @@ const SearchOrder = ({ data, setData }: OrderProps) => {
 				type="text"
 				placeholder="search phone number"
 				name="telephone"
-				// value={value}
-				onChange={handleChange}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+					setTelephone(e.target.value)
+				}
 				className="border pl-10 p-2  rounded-lg focus:outline-none"
 			/>
 		</div>

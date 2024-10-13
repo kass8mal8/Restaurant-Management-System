@@ -10,6 +10,8 @@ const Order = () => {
 	const [status, setStatus] = useState<string>("");
 
 	const statuses = ["Pending", "Completed"];
+
+	// Filter the orders according to their status i.e pending or completed
 	useEffect(() => {
 		if (statuses.includes(status)) {
 			const index = statuses.indexOf(status);
@@ -35,7 +37,7 @@ const Order = () => {
 
 			<div className="border rounded mt-2">
 				<ul className="flex justify-between bg-gray-200 py-2 px-4 rounded-t mb-2 opacity-60 font-semibold">
-					<li>Order</li>
+					<li>Order Id</li>
 					<li>Date</li>
 					<li>Telephone</li>
 					<li>Status</li>
@@ -44,7 +46,7 @@ const Order = () => {
 					<li className="w-[50px]"></li>
 				</ul>
 
-				<OrderList data={orderData} />
+				<OrderList data={orderData || []} />
 			</div>
 		</div>
 	);

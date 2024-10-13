@@ -12,10 +12,6 @@ const objectOptions = {
 };
 
 const orderSchema = new Schema({
-	userId: {
-		...objectOptions,
-		ref: "User",
-	},
 	telephone: {
 		type: String,
 		required: true,
@@ -42,7 +38,7 @@ const orderSchema = new Schema({
 	},
 	status: {
 		type: String,
-		enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+		enum: ["Pending", "Completed"],
 		default: "Pending",
 	},
 });

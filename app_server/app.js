@@ -25,7 +25,7 @@ app.use(
 app.use(limiter);
 app.use(
 	cors({
-		origin: "http://localhost:5173", // Your frontend URL
+		origin: "http://localhost:5173", // frontend URL
 		credentials: true, // Allow cookies to be sent and received
 	})
 );
@@ -35,8 +35,10 @@ app.use(cookieParser());
 
 const authRoute = require("./routes/auth");
 const orderRoute = require("./routes/orders");
+const itemRoute = require("./routes/items");
 
 app.use("/api/auth", authRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/items", itemRoute);
 
 module.exports = app;
