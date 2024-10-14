@@ -106,8 +106,6 @@ const OrderList = ({ data }: OrderProps) => {
 								className="min-w-[60px] cursor-pointer p-2 text-center flex justify-between opacity-55"
 								onClick={() => setSelectedOrderId(item._id)}
 							>
-								{/* <img src={deleteIcon} alt="delete" className="w-4 h-4" />
-						<img src={printer} alt="printer" className="w-4 h-4" /> */}
 								<img src={options} alt="options" className="w-5 h-1" />
 							</li>
 

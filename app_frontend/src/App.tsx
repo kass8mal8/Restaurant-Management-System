@@ -5,6 +5,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import Order from "./components/orders/Order";
 import Items from "./components/items/Items";
+import AddItem from "./components/items/AddItem";
 
 const App: React.FC = () => {
 	return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
 				<Route path="/" element={<Dashboard />}>
 					<Route path="orders" element={<Order />} />
 					<Route path="items" element={<Items />} />
+					<Route path="/items/add" element={<AddItem />} />
 				</Route>
 				<Route path="/signup" element={<Signup />} />
 				<Route path="/signin" element={<Signin />} />
