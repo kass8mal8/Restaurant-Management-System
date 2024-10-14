@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import editIcon from "../../assets/images/edit.png";
+import deleteIcon from "../../assets/images/delete.png";
 
 interface Item {
 	title?: string | undefined;
@@ -85,7 +87,9 @@ const AddItem = () => {
 						className="p-3 w-[50%] bg-white border rounded"
 						value={items?.category || ""}
 						name="category"
-						// onChange={(e) => setItems({ ...items, category: e.target.value })}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setItems({ ...items, category: e.target.value })
+						}
 					>
 						<option value="">Select a category</option>
 						<option value="Breakfast">Breakfast</option>
@@ -98,8 +102,34 @@ const AddItem = () => {
 				</div>
 			</form>
 
-			<div className="bg-white p-3 rounded-md w-[47%]">
-				Added Items will appear here
+			<div className="bg-white p-3 rounded-md w-[47%] ">
+				{addedItems ? (
+					addedItems.items.map((item, index) => (
+						<div
+							key={index}
+							className="flex justify-between bg-gray-100 rounded p-2 mb-2"
+						>
+							<aside className="flex space-x-4 items-center">
+								<p className="min-w-[200px] border-r pr-3">{item.title}</p>
+								<p className="border-r px-4 min-w-[120px]">{item.category}</p>
+							</aside>
+							<aside className="flex space-x-4 items-center">
+								<img
+									src={editIcon}
+									alt="editIcon"
+									className="w-4 h-4 opacity-45"
+								/>
+								<img
+									src={deleteIcon}
+									alt="deleteIcon"
+									className="w-4 h-4 opacity-45"
+								/>
+							</aside>
+						</div>
+					))
+				) : (
+					<p>Added products will appear here!</p>
+				)}
 			</div>
 		</div>
 	);
