@@ -19,32 +19,40 @@ type OrderProps = {
 };
 
 const OrderHeader = ({ data }: OrderProps) => {
-	const items = data?.map((item) => item.products);
+	console.log("Data:", data.length);
+	const items = data.length > 0 ? data?.map((item) => item.products) : [];
 	const totalQuantity = items?.map((item) => item.length);
 
 	const totalProductQuantity = totalQuantity?.reduce((a, b) => a + b, 0);
 
-	const completedOrders = data?.filter((item) => item.status !== "Pending");
+	const completedOrders =
+		data.length > 0 ? data?.filter((item) => item.status !== "Pending") : [];
 
 	// Get orders for last week
-	const lastWeekOrders = data?.filter((item) =>
-		moment(item.orderDate).isBetween(
-			moment().subtract(1, "week"),
-			moment().startOf("week"),
-			null,
-			"[]"
-		)
-	);
+	const lastWeekOrders =
+		data.length > 0
+			? data?.filter((item) =>
+					moment(item.orderDate).isBetween(
+						moment().subtract(1, "week"),
+						moment().startOf("week"),
+						null,
+						"[]"
+					)
+			  )
+			: [];
 
 	// Get orders for this week
-	const thisWeekOrders = data?.filter((item) =>
-		moment(item.orderDate).isBetween(
-			moment().startOf("week"),
-			moment(),
-			null,
-			"[]"
-		)
-	);
+	const thisWeekOrders =
+		data.length > 0
+			? data?.filter((item) =>
+					moment(item.orderDate).isBetween(
+						moment().startOf("week"),
+						moment(),
+						null,
+						"[]"
+					)
+			  )
+			: [];
 
 	const thisWeekItems = thisWeekOrders?.map((item) => item.products);
 	const lastWeekItems = lastWeekOrders?.map((item) => item.products);

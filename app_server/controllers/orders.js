@@ -23,9 +23,9 @@ const addOrder = async (req, res) => {
 
 // return orders from all users
 const getOrder = async (req, res) => {
-	// const adminId = req.params;
+	const { userId } = req.params;
 	try {
-		const order = await Order.find();
+		const order = await Order.find({ userId });
 		order.length > 0
 			? res.json(order).status(201)
 			: res.json("Not Found").status(404);

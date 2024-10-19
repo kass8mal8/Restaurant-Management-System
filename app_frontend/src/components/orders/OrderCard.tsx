@@ -43,6 +43,7 @@ const OrderCard = ({ orders, id, isOpen, setIsOpen }: OrderCardProps) => {
 		if (isOpen) modalRef.current?.showModal();
 	}, [isOpen]);
 	console.log(order);
+	const d = new Date();
 	return (
 		<dialog
 			ref={modalRef as React.RefObject<HTMLDialogElement>}
@@ -51,9 +52,16 @@ const OrderCard = ({ orders, id, isOpen, setIsOpen }: OrderCardProps) => {
 		>
 			{order.map((item) => (
 				<div key={item._id}>
-					<div className="flex justify-between">
-						<p>{item.telephone}</p>
-						<p>{item.products.length} Items</p>
+					<div className="">
+						<p>
+							Date -
+							{`${""} ${d.toLocaleDateString("en-US", {
+								day: "numeric",
+								month: "short",
+								year: "numeric",
+							})}`}
+						</p>
+						<p>Telephone - {item.telephone}</p>
 					</div>
 					<ul className="flex justify-between p-2 mt-4 bg-gray-100 rounded-t">
 						<li>Item</li>
