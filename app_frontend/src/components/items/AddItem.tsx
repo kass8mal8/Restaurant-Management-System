@@ -37,7 +37,6 @@ const AddItem = () => {
 			});
 		}
 	};
-	console.log(addedItems);
 
 	return (
 		<div className="ml-[17%] mt-[6%] w-[82%] flex space-x-4">

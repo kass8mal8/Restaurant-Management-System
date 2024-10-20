@@ -5,15 +5,16 @@ import ItemsHeader from "./ItemsHeader";
 import ItemsList from "./ItemsList";
 import ItemsSort from "./ItemsSort";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Items = () => {
-	// const { user } = useAuthContext();
-	const { data: items } = useFetch("/items/66e801ef3a520bd299866ddf", "items");
+	const { user } = useAuthContext();
+	const { data: items } = useFetch(`/items/${user?.id}`, "items");
 	const statuses = ["true", "false"];
 	const [status, setStatus] = useState<string>("");
 	const [itemData, setItemData] = useState(items);
 
-	console.log(itemData);
+	console.log(user);
 
 	useEffect(() => {
 		if (statuses.includes(status)) {
