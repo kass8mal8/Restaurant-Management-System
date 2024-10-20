@@ -6,6 +6,7 @@ import React, {
 	useEffect,
 	ReactNode,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 
 // Define the types
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -37,6 +39,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				});
 				setUser(res.data?.user);
 			} catch (error) {
+				setTimeout(() => {
+					navigate("/signin");
+				}, 6000);
 				console.log("Error fetching profile:", error);
 			}
 		};

@@ -50,7 +50,7 @@ const OrderList = ({ data }: OrderProps) => {
 		}
 	};
 	const [viewId, setViewId] = useState<string>("");
-	// console.log(viewId);
+
 	const handleView = (id: string) => {
 		setViewId(id);
 		setIsOpen(true);

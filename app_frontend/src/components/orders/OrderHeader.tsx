@@ -19,7 +19,6 @@ type OrderProps = {
 };
 
 const OrderHeader = ({ data }: OrderProps) => {
-	console.log("Data:", data.length);
 	const items = data.length > 0 ? data?.map((item) => item.products) : [];
 	const totalQuantity = items?.map((item) => item.length);
 
@@ -62,7 +61,7 @@ const OrderHeader = ({ data }: OrderProps) => {
 			: 0;
 
 	const itemsDivisor =
-		itemsDiff > 0
+		itemsDiff >= 0
 			? itemsDiff / totalProductQuantity
 			: Math.abs(itemsDiff) / totalProductQuantity;
 	const itemsPercentage = (itemsDivisor * 100).toFixed(2);
@@ -70,10 +69,11 @@ const OrderHeader = ({ data }: OrderProps) => {
 	const orderDiff = thisWeekOrders?.length - lastWeekOrders?.length;
 
 	const orderDivisor =
-		orderDiff > 0
+		orderDiff >= 0
 			? orderDiff / data?.length
 			: Math.abs(orderDiff) / data?.length;
 	const percentage = (orderDivisor * 100).toFixed(2);
+	console.log("Order Diff and Divisor", itemsDivisor, data);
 
 	return (
 		<div className="flex justify-between">

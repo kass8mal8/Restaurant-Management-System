@@ -11,8 +11,6 @@ const Order = () => {
 	const [orderData, setOrderData] = useState(data);
 	const [status, setStatus] = useState<string>("");
 
-	console.log(typeof orderData === "string");
-
 	const statuses = ["Pending", "Completed"];
 
 	// Filter the orders according to their status i.e pending or completed
