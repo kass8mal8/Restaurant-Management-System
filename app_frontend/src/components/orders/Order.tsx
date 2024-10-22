@@ -3,9 +3,11 @@ import useFetch from "../../hooks/useFetch";
 import OrderHeader from "./OrderHeader";
 import { useEffect, useState } from "react";
 import OrderSort from "./OrderSort";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Order = () => {
-	const { data } = useFetch("/orders", "orders");
+	const { user } = useAuthContext();
+	const { data } = useFetch(`/orders/${user?.id}`, "orders");
 	const [orderData, setOrderData] = useState(data);
 	const [status, setStatus] = useState<string>("");
 
@@ -26,12 +28,12 @@ const Order = () => {
 
 	return (
 		<div className="ml-[17%] mt-[6%] w-[82%]">
-			<OrderHeader data={data} />
+			<OrderHeader data={(typeof orderData !== "string" && orderData) || []} />
 			<OrderSort
 				setStatus={setStatus}
 				statuses={statuses}
 				status={status}
-				data={orderData}
+				data={(typeof orderData !== "string" && orderData) || []}
 				setData={setOrderData}
 			/>
 
@@ -46,7 +48,7 @@ const Order = () => {
 					<li className="w-[50px]"></li>
 				</ul>
 
-				<OrderList data={orderData || []} />
+				<OrderList data={(typeof orderData !== "string" && orderData) || []} />
 			</div>
 		</div>
 	);

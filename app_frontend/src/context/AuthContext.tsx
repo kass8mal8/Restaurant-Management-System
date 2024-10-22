@@ -6,13 +6,16 @@ import React, {
 	useEffect,
 	ReactNode,
 } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import { isAxiosError } from "axios";
 
 // Define the types
 type User = {
 	first_name: string;
 	last_name: string;
 	email: string;
+	id: string;
 };
 
 type AuthContextType = {
@@ -25,6 +28,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -36,12 +41,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				});
 				setUser(res.data?.user);
 			} catch (error) {
-				console.log("Error fetching profile:", error);
+				setTimeout(() => {
+					if (location?.pathname !== "/signup") navigate("/signin");
+				}, 6000);
+				if (isAxiosError(error) && error?.response) {
+					console.log(error?.response.data.message);
+				}
 			}
 		};
 
 		fetchProfile();
-	}, []);
+	}, [navigate]);
 
 	return (
 		<AuthContext.Provider value={{ user, setUser }}>

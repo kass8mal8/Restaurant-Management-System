@@ -18,12 +18,19 @@ const getItems = async (req, res) => {
 
 const addItem = async (req, res) => {
 	const { userId } = req.params;
-	const item = req.body;
+	const { title, price, quantity, category } = req.body;
 
 	try {
-		const newItem = Item.create({ ...item, userId });
+		const newItem = await Item.create({
+			title,
+			price: Number(price),
+			quantity: Number(quantity),
+			category,
+			userId,
+		});
+		console.log(newItem);
 
-		if (newItem.length) {
+		if (newItem) {
 			res.status(201).json({ message: "Item added successfully" });
 		} else {
 			res.status(400).json({ message: "Invalid item data" });

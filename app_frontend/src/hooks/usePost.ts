@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
+import { isAxiosError } from "axios";
 
 const usePost = (url: string) => {
 	const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const usePost = (url: string) => {
 
 			return res.data;
 		} catch (error) {
-			if (axios.isAxiosError(error) && error.response) {
+			if (isAxiosError(error) && error.response) {
 				throw error.response.data;
 			} else {
 				throw new Error("An unexpected error occurred");
