@@ -6,8 +6,9 @@ import React, {
 	useEffect,
 	ReactNode,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import { isAxiosError } from "axios";
 
 // Define the types
 type User = {
@@ -28,6 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -40,14 +42,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				setUser(res.data?.user);
 			} catch (error) {
 				setTimeout(() => {
-					navigate("/signin");
+					if (location?.pathname !== "/signup") navigate("/signin");
 				}, 6000);
-				console.log("Error fetching profile:", error);
+				if (isAxiosError(error) && error?.response) {
+					console.log(error?.response.data.message);
+				}
 			}
 		};
 
 		fetchProfile();
-	}, []);
+	}, [navigate]);
 
 	return (
 		<AuthContext.Provider value={{ user, setUser }}>
