@@ -2,6 +2,8 @@
 import OrderSkeleton from "../orders/OrderSkeleton";
 import edit from "../../assets/images/edit.png";
 import deleteIcon from "../../assets/images/delete.png";
+import AddItem from "./AddItem";
+import { useEffect, useRef } from "react";
 
 type Item = {
 	quantity: number;
@@ -14,11 +16,39 @@ type Item = {
 
 type ItemsProps = {
 	items: Item[];
+	isOpen: boolean;
+	setIsOpen: (isOpen: boolean) => void;
 };
 
-const ItemsList = ({ items }: ItemsProps) => {
+const ItemsList = ({ items, isOpen, setIsOpen }: ItemsProps) => {
+	const modalRef = useRef<HTMLDialogElement | null>(null);
+
+	const handleClose = (e: React.MouseEvent<HTMLDialogElement>) => {
+		const dimensions = modalRef.current?.getBoundingClientRect();
+		if (dimensions) {
+			if (
+				e.clientX < dimensions.left ||
+				e.clientX > dimensions.right ||
+				e.clientY < dimensions.top ||
+				e.clientY > dimensions.bottom
+			) {
+				setIsOpen(false);
+				modalRef.current?.close();
+			}
+		}
+	};
+	useEffect(() => {
+		if (isOpen) modalRef.current?.showModal();
+	}, [isOpen]);
 	return (
 		<div>
+			<dialog
+				ref={modalRef as React.RefObject<HTMLDialogElement>}
+				onClick={handleClose}
+				className="border p-0 -mb-4 md:mb-auto py-5 px-6 w-full md:w-1/3 rounded-2xl max-w-[50ch] backdrop:opacity-50 backdrop:bg-black"
+			>
+				<AddItem />
+			</dialog>
 			{!items ? (
 				<OrderSkeleton />
 			) : (
